@@ -1,11 +1,19 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 
-
-def test_view(request):
-    return HttpResponse("httpresponse")
+from posts.models import Post
 
 
 def main_page_view(request):
     return render(request, 'home.html')
+
+
+def post_list_view(request):
+    posts = Post.objects.all()
+    return render(request, "posts/post_list.html", context={"posts": posts})
+
+
+def post_detail_view(request, post_id):
+    post = Post.objects.get(id=post_id)
+    return render(request, "posts/post_detail.html", context={"post": post})
 # Create your views here.

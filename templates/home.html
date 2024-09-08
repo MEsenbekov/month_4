@@ -1,59 +1,47 @@
 <!DOCTYPE html>
 <html>
 <head>
- <title>Магазин книг</title>
- <link rel="stylesheet" type="text/css" href="body.css">  
- <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <link rel="stylesheet" href="body.css">
-</head>
-<body>
- <header>
-  <h1>Книжный червь</h1>
-  <nav>
-   <ul>
-    <li><a href="#">Главная</a></li>
-    <li><a href="katalog.html">Каталог</a></li>
-    <li><a href="o nas.html">О нас</a></li>
-    <li><a href="kontacts.html">Контакты</a></li>
-   </ul>
-  </nav>
- </header>
- <main>
-  <section class="hero">
-   <h2>Лучшие книги по самым низким ценам</h2>
-   <p>У нас вы найдете огромный выбор книг на любой вкус и цвет. Заходите и выбирайте!</p>
-   <a href="katalog.html" class="btn">Перейти в каталог</a>
-  </section>
-  <section class="featured">
-   <h2>Рекомендуемые книги</h2>
-   <div class="books">
-    <div class="book">
-     <img src="игра престолов.jpg" alt="Книга 1">
-     <h3>Песнь льда и пламени</h3>
-     <p>Автор:Джордж Мартин</p>
-     <p>Цена: 100 руб.</p>
-     <a href="#" class="btn">Купить</a>
-    </div>
-    <div class="book">
-     <img src="гарри.jpg" alt="Книга 2">
-     <h3>Гарри Поттер и философский камень</h3>
-     <p>Автор: Джоан Роулинг</p>
-     <p>Цена: 200 руб.</p>
-     <a href="#" class="btn">Купить</a>
-    </div>
-    <div class="book">
-     <img src="ген.jpg" alt="Книга 3">
-     <h3>Эгоистичный ген</h3>
-     <p>Автор:Ричард Докинз</p>
-     <p>Цена: 300 руб.</p>
-     <a href="#" class="btn">Купить</a>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/posts/">Posts</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Dropdown
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+        </li>
+      </ul>
+      <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
     </div>
    </div>
-  </section>
- </main>
- <footer>
-  <p>© 2023 Книжный червь</p>
- </footer>
-</body>
+  </nav>
+</head>
+{%block content%}
+
+{%endblock%}
 </html>

@@ -1,13 +1,33 @@
 {% extends 'home.html' %}
+{% load static %}
 {% block content %}
 
 <div class="card" style="width: 18rem;">
-  <img src="..." class="card-img-top" alt="...">
-  <div class="card-body">
-    <h5 class="card-title">{{post.title}}</h5>
-    <p class="card-text">{{post.content}}</p>
-      <p class="card-text">{{post.rate}}</p>
-      <p class="card-text">{{post.created_ad}}</p>
-  </div>
+    {% if post.image %}
+        <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}">
+    {% else %}
+        <img src="{% static 'img.png' %}" class="card-img-top" alt="...">
+    {% endif %}
+    <div class="card-body">
+        <h5 class="card-title">{{ post.title }}</h5>
+        <p class="card-text">{{ post.content }}</p>
+        <p class="card-text">{{ post.rate }}</p>
+        <p class="card-text">{{ post.created }}</p>
+    </div>
 </div>
+
+<form method="POST">  <!-- Добавлено method="POST" -->
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Добавить комментарий</button>
+</form>
+
+{% for comment in comments %}
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="card-title">{{ comment.text }}</h5>
+    </div>
+</div>
+{% endfor %}
+
 {% endblock %}

@@ -1,5 +1,5 @@
 from django import forms
-from posts.models import Post, Comment
+from posts.models import Post, Comment, Tag
 
 
 class CommentForm(forms.ModelForm):
@@ -29,3 +29,32 @@ class PostForm(forms.ModelForm):
             raise forms.ValidationError("Тайтл и контент должны различаться")
 
         return cleaned_data
+
+
+class searchForm(forms.Form):
+    search = forms.CharField(
+        required=False,
+        max_length=100,
+        min_length=2,
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': 'Search',
+                'class': 'form-control',
+            })
+    )
+    tags = forms.ModelMultipleChoiceField(
+        required=False,
+        queryset=Tag.objects.all(),
+        widget=forms.CheckboxSelectMultiple()
+    )
+
+    orderings = (
+        ('created', 'Дата создания'),
+        ('-created', 'Дата создания (убыванию)'),
+        ('title', 'По названию'),
+        ('-title', 'По названию (убыванию)'),
+        ('rate', 'По рейтингу'),
+        ('-rate', 'По рейтингу (убыванию)'),
+    )
+
+    ordering = forms.ChoiceField(required=False, choices=orderings)

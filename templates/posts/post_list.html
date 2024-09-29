@@ -1,20 +1,43 @@
 {% extends 'home.html' %}
-{%load static%}
+{% load static %}
 {% block content %}
-{% for post in posts %}
-<div class="card" style="width: 18rem;">
-    {% if post.image %}
-    <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}">
-    {% else %}
-    <img src="{%static 'img.png' %}" class="card-img-top" alt="...">
-    {% endif %}
-    <div class="card-body">
-        <h5 class="card-title">{{ post.title }}</h5>
-        <p class="card-text">{{ post.content }}</p>
-        <p class="card-text">{{ post.rate }}</p>
-        <p class="card-text">{{ post.created }}</p>
-        <a href="/posts/{{ post.id }}/" class="btn btn-primary">Перейти к посту</a>
+    <form action="" method="get">
+        {{ form.as_p }}
+        <button type="submit">Search</button>
+    </form>
+
+    {% for post in posts %}
+    <div class="card" style="width: 18rem; margin-bottom: 20px;">
+        {% if post.image %}
+        <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}">
+        {% else %}
+        <img src="{% static 'img.png' %}" class="card-img-top" alt="...">
+        {% endif %}
+        <div class="card-body">
+            <h5 class="card-title">{{ post.title }}</h5>
+            <p class="card-text">{{ post.content }}</p>
+            <p class="card-text">Рейтинг: {{ post.rate }}</p>
+            <p class="card-text">Дата создания: {{ post.created }}</p>
+            <a href="/posts/{{ post.id }}/" class="btn btn-primary">Перейти к посту</a>
+        </div>
     </div>
-</div>
-{% endfor %}
+    {% endfor %}
+
+    <div style="display: flex; justify-content: center; margin-top: 20px; margin-bottom: 20px;">
+        {% if posts.has_previous %}
+            <a class="btn btn-primary" href="?page={{ posts.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.ordering %}&ordering={{ request.GET.ordering }}{% endif %}{% if request.GET.tags %}&tags={{ request.GET.tags|join:',' }}{% endif %}">Предыдущая</a>
+        {% endif %}
+
+        {% for num in posts.paginator.page_range %}
+            {% if posts.number == num %}
+                <span class="btn btn-secondary">{{ num }}</span>
+            {% else %}
+                <a class="btn btn-primary" href="?page={{ num }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.ordering %}&ordering={{ request.GET.ordering }}{% endif %}{% if request.GET.tags %}&tags={{ request.GET.tags|join:',' }}{% endif %}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if posts.has_next %}
+            <a class="btn btn-primary" href="?page={{ posts.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.ordering %}&ordering={{ request.GET.ordering }}{% endif %}{% if request.GET.tags %}&tags={{ request.GET.tags|join:',' }}{% endif %}">Следующая</a>
+        {% endif %}
+    </div>
 {% endblock %}

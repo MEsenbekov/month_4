@@ -1,18 +1,26 @@
 from django.conf import settings
 from django.contrib import admin
 from django.urls import path
-from posts.views import main_page_view, post_list_view, post_detail_view, post_create_view
+from posts.views import MainPageView, PostListView, PostDetailView, PostCreateView, PostUpdateView
 from django.conf.urls.static import static
 from user.views import register_view, login_view, logout_view, profile
 
 urlpatterns = [
-    path('', main_page_view, name='home'),
-    path('login/', login_view, name='login'),
-    path('logout/', logout_view, name='logout'),
-    path("register/", register_view, name="register"),  # Это правильный путь для регистрации
-    path('admin/', admin.site.urls),
-    path('posts/', post_list_view, name="posts"),
-    path("posts/<int:post_id>/", post_detail_view, name="post_detail"),
-    path("posts/create/", post_create_view, name="post_create"),
-    path("profile/", profile, name="profile"),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+                  path('', MainPageView.as_view(), name='home'),
+                  # Используем классовое представление для главной страницы
+                  path('login/', login_view, name='login'),
+                  path('logout/', logout_view, name='logout'),
+                  path("register/", register_view, name="register"),
+                  path('admin/', admin.site.urls),
+
+                  # Посты
+                  path('posts/', PostListView.as_view(), name="posts"),  # Список постов через ListView
+                  path("posts/<int:post_id>/", PostDetailView.as_view(), name="post_detail"),
+                  # Детализация поста через DetailView
+                  path("posts/create/", PostCreateView.as_view(), name="post_create"),
+                  # Создание поста через CreateView
+                  path('posts/<int:post_id>/update/', PostUpdateView.as_view(), name="post_update"),
+                  # Обновление поста через UpdateView
+
+                  path("profile/", profile, name="profile"),
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,69 +1,86 @@
-from django.contrib.auth import REDIRECT_FIELD_NAME
-from django.shortcuts import render, redirect
-from posts.forms import PostForm, CommentForm, searchForm
-from posts.models import Post, Comment
-from django.contrib.auth.decorators import login_required
+from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
 from django.db.models import Q
 from django.core.paginator import Paginator
-
-def main_page_view(request):
-    return render(request, 'home.html')
-
-
-@login_required(login_url='login')
-def post_list_view(request):
-    form = searchForm(request.GET)
-    posts = Post.objects.all()
-
-    search = request.GET.get('search')
-    tags = request.GET.getlist('tags')
-    ordering = request.GET.get('ordering')
-
-    # Поиск по заголовку и контенту
-    if search:
-        posts = posts.filter(Q(title__icontains=search) | Q(content__icontains=search))
-
-    # Фильтрация по тегам
-    if tags:
-        posts = posts.filter(tags__in=tags).distinct()
-
-    # Сортировка
-    if ordering:
-        posts = posts.order_by(ordering)
-
-    # Пагинация
-    paginator = Paginator(posts, 3)  # Показываем по 3 поста на странице
-    page_number = request.GET.get('page')
-    posts = paginator.get_page(page_number)
-
-    context = {'posts': posts, 'form': form, 'max_pages': range(1, paginator.num_pages + 1)}
-    return render(request, "posts/post_list.html", context=context)
+from posts.models import Post, Comment
+from posts.forms import PostForm, CommentForm, searchForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-def post_detail_view(request, post_id):
-    post = Post.objects.get(id=post_id)
-    comments = post.comments.all()
-    form = CommentForm()
+class MainPageView(TemplateView):
+    template_name = 'home.html'
 
-    if request.method == "POST":
+
+class PostListView(LoginRequiredMixin, ListView):
+    model = Post
+    template_name = 'posts/post_list.html'
+    context_object_name = 'posts'
+    paginate_by = 3  # Пагинация: 3 поста на странице
+    login_url = 'login'
+
+    def get_queryset(self):
+        queryset = Post.objects.all()
+        search = self.request.GET.get('search')
+        tags = self.request.GET.getlist('tags')
+        ordering = self.request.GET.get('ordering')
+
+        # Поиск по заголовку и контенту
+        if search:
+            queryset = queryset.filter(Q(title__icontains=search) | Q(content__icontains=search))
+
+        # Фильтрация по тегам
+        if tags:
+            queryset = queryset.filter(tags__in=tags).distinct()
+
+        # Сортировка
+        if ordering:
+            queryset = queryset.order_by(ordering)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        form = searchForm(self.request.GET)
+        paginator = Paginator(self.get_queryset(), self.paginate_by)
+        context['form'] = form
+        context['max_pages'] = range(1, paginator.num_pages + 1)
+        return context
+
+
+class PostDetailView(DetailView):
+    model = Post
+    template_name = 'posts/post_detail.html'
+    context_object_name = 'post'
+    pk_url_kwarg = 'post_id'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['comments'] = self.object.comments.all()
+        context['form'] = CommentForm()
+        return context
+
+    def post(self, request, *args, **kwargs):
         form = CommentForm(request.POST)
+        post = self.get_object()
         if form.is_valid():
             text = form.cleaned_data.get("text")
             Comment.objects.create(post=post, text=text)
-            return redirect(f"/posts/{post_id}/")
-
-    return render(request, "posts/post_detail.html", context={"post": post, "form": form, "comments": comments})
+        return redirect(f"/posts/{post.id}/")
 
 
-@login_required()
-def post_create_view(request):
-    if request.method == "GET":
-        form = PostForm()
-        return render(request, "posts/post_create.html", context={"form": form})
+class PostCreateView(LoginRequiredMixin, CreateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'posts/post_create.html'
+    success_url = reverse_lazy('post_list')  # Redirect после успешного создания
+    login_url = 'login'
 
-    if request.method == "POST":
-        form = PostForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect("/posts/")
-    return render(request, "posts/post_create.html", context={"form": form})
+
+class PostUpdateView(LoginRequiredMixin, UpdateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'posts/post_update.html'
+    pk_url_kwarg = 'post_id'
+    success_url = reverse_lazy('post_list')  # Redirect после успешного обновления
+    login_url = 'login'

@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from posts.views import MainPageView, PostListView, PostDetailView, PostCreateView, PostUpdateView
 from django.conf.urls.static import static
 from user.views import register_view, login_view, logout_view, profile
@@ -23,4 +23,5 @@ urlpatterns = [
                   # Обновление поста через UpdateView
 
                   path("profile/", profile, name="profile"),
+                  path('', include('parser.urls')),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

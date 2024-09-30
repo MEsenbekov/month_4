@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.urls import path
 from posts.views import main_page_view, post_list_view, post_detail_view, post_create_view
 from django.conf.urls.static import static
-from user.views import register_view, login_view, logout_view
+from user.views import register_view, login_view, logout_view, profile
 
 urlpatterns = [
     path('', main_page_view, name='home'),
@@ -14,4 +14,5 @@ urlpatterns = [
     path('posts/', post_list_view, name="posts"),
     path("posts/<int:post_id>/", post_detail_view, name="post_detail"),
     path("posts/create/", post_create_view, name="post_create"),
+    path("profile/", profile, name="profile"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

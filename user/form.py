@@ -4,6 +4,7 @@ from django import forms
 
 
 class RegisterForm(forms.Form):
+    image = forms.ImageField(required=False)
     username = forms.CharField()
     email = forms.EmailField()
     first_name = forms.CharField(required=False)

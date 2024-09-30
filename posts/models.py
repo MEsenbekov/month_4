@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -17,6 +18,7 @@ class Tag(models.Model):
 
 class Post(models.Model):
     objects = None
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts', null=True)
     title = models.CharField(max_length=100)
     content = models.TextField(null=True, blank=True)
     rate = models.IntegerField(default=0)
